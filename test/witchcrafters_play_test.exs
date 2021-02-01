@@ -147,4 +147,119 @@ defmodule WitchcraftersPlayTest do
               middle_key: 2
             }
         end
+
+        test "lower middle node insert for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            3, "Now is the time") ==
+            %Tree23.Node4{
+              left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+              lower_middle: %Tree23.Leaf{key: 3, value: "Now is the time"},
+              upper_middle: %Tree23.Leaf{key: 4, value: "abcd"},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+              upper_key: 4,
+              middle_key: 3
+            }
+        end
+
+        test "upper middle node insert for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            5, "Now is the time") ==
+            %Tree23.Node4{
+              left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+              lower_middle: %Tree23.Leaf{key: 4, value: "abcd"},
+              upper_middle: %Tree23.Leaf{key: 5, value: "Now is the time"},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+              upper_key: 5,
+              middle_key: 4
+            }
+        end
+
+        test "upper node insert for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            7, "Now is the time") ==
+            %Tree23.Node4{
+              left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+              lower_middle: %Tree23.Leaf{key: 4, value: "abcd"},
+              upper_middle: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 7, value: "Now is the time"},
+              upper_key: 6,
+              middle_key: 4
+            }
+        end
+
+        test "left node update for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            2, "Now is the time") ==
+            %Tree23.Node3{
+              left: %Tree23.Leaf{key: 2, value: "Now is the time"},
+              middle: %Tree23.Leaf{key: 4, value: "abcd"},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+              upper_key: 4
+            }
+        end
+
+        test "middle node update for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            4, "Now is the time") ==
+            %Tree23.Node3{
+              left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+              middle: %Tree23.Leaf{key: 4, value: "Now is the time"},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+              upper_key: 4
+            }
+        end
+
+        test "right node update for 3 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+                middle: %Tree23.Leaf{key: 4, value: "abcd"},
+                lower_key: 2,
+                right: %Tree23.Leaf{key: 6, value: %{a: 1, b: 2}},
+                upper_key: 4
+},
+            6, "Now is the time") ==
+            %Tree23.Node3{
+              left: %Tree23.Leaf{key: 2, value: "xyzzy"},
+              middle: %Tree23.Leaf{key: 4, value: "abcd"},
+              lower_key: 2,
+              right: %Tree23.Leaf{key: 6, value: "Now is the time"},
+              upper_key: 4
+            }
+        end
+
 end
