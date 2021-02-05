@@ -118,7 +118,8 @@ defmodule WitchcraftersPlay.Tree23 do
                      Node3.new(mk, mrk, max_right_key, Node2.new(lk, mk, l, lm), Node2.new(uk, mrk, um, r),
                        right)
                      _ -> Map.put(tree, :left, new_node)
-        end
+
+                 end
       :equal -> Map.put(tree, :left, insert(left, orderable, value))
       :greater -> case new_node = insert(right, orderable, value) do
           %Node4{lower_key: lk, middle_key: mk, upper_key: uk, max_right_key: mrk, left: l,
@@ -130,32 +131,39 @@ defmodule WitchcraftersPlay.Tree23 do
   end
 
   def insert(
-        tree = %Node3{lower_key: lower_key, upper_key: upper_key, left: left, middle: middle, right: right},
+        tree = %Node3{lower_key: lower_key, upper_key: upper_key, max_right_key: max_right_key, left: left, middle: middle, right: right},
         orderable,
         value
       ) do
     case {compare(orderable, lower_key), compare(orderable, upper_key)} do
       {:lesser, _} -> case new_node = insert(left, orderable, value) do
-                        %Node4{lower_key: lk, middle_key: mk, upper_key: uk, left: l,
+                        %Node4{lower_key: lk, middle_key: mk, upper_key: uk, max_right_key: mrk, left: l,
                           lower_middle: lm, upper_middle: um, right: r} ->
-                          Node4.new(lk, mk, Node2.new(lk, mk, l, lm), Node2.new(mk, uk, um, r), middle, right)
+                          Node4.new(mk, lower_key, upper_key, max_right_key, Node2.new(lk, mk, l, lm), Node2.new(uk, mrk, um, r), middle, right)
                         _ -> %{tree | left: new_node}
                end
       {:equal, _} -> %{tree | left: insert(left, orderable, value)}
       {:greater, :lesser} -> case new_node = insert(middle, orderable, value) do
                                %Node4{lower_key: lk, middle_key: mk, upper_key: uk, left: l,
                                  lower_middle: lm, upper_middle: um, right: r} ->
-                                 Node4.new(mk, uk, left, Node2.new(lk, mk, l, lm), Node2.new(mk, uk, um, r), right)
+                                 Node4.new(lower_key, mk, upper_key, max_right_key, left, Node2.new(lk, mk, l, lm), Node2.new(mk, uk, um, r), right)
                               _ -> %{tree | middle: new_node}
                                end
       {:greater, :equal} -> %{tree | right: insert(middle, orderable, value)}
       {:greater, :greater} -> case new_node = insert(right, orderable, value) do
-                                %Node4{lower_key: lk, middle_key: mk, upper_key: uk, left: l,
+                                %Node4{lower_key: lk, middle_key: mk, upper_key: uk, max_right_key: mrk, left: l,
                                   lower_middle: lm, upper_middle: um, right: r} ->
-                                  Node4.new(mk, uk, left, middle, Node2.new(lk, mk, l, lm), Node2.new(mk, uk, um, r))
-                                _ -> %{tree | right: new_node, max_right_key: new_node.max_right_key}
+                                  Node4.new(lower_key, upper_key, uk, mrk, left, middle, Node2.new(lk, mk, l, lm), Node2.new(mk, uk, um, r))
+                                _ -> %{tree | right: new_node, max_right_key: new_node.max_right_key }
                               end
     end
   end
 
+  def put(tree, key, value) do
+    case new_tree = insert(tree, key, value) do
+       %Node4{left: l, lower_middle: lm, upper_middle: um, right: r, middle_key: mk, lower_key: lk, upper_key: uk, max_right_key: mrk} ->
+         Node2.new(mk, mrk, Node2.new(lk, mk, l, lm), Node2.new(uk, mrk, um, r))
+      _ -> new_tree
+    end
+  end
 end

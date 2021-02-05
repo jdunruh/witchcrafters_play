@@ -445,4 +445,57 @@ defmodule WitchcraftersPlayTest do
                   lower_key: 4, upper_key: 10, max_right_key: 18}
         end
 
+        test "left branch updated, to a 4 node" do
+          assert Tree23.insert(%Tree23.Node3{
+                left: %Tree23.Node3{left: %Tree23.Leaf{key: 1, value: "z"},
+                                    middle: %Tree23.Leaf{key: 2, value: "a"},
+                                    right: %Tree23.Leaf{key: 4, value: "b"},
+                                    lower_key: 1, upper_key: 2, max_right_key: 4},
+                middle: %Tree23.Node2{left: %Tree23.Leaf{key: 8, value: "c"},
+                                      right: %Tree23.Leaf{key: 10, value: "d"},
+                                      lower_key: 8, max_right_key: 10},
+                right: %Tree23.Node2{left: %Tree23.Leaf{key: 14, value: "e"},
+                                     right: %Tree23.Leaf{key: 16, value: "f"},
+                                     lower_key: 14, max_right_key: 16},
+                lower_key: 4, upper_key: 10, max_right_key: 16}, 3, "g") ==
+            %Tree23.Node4{
+                  left: %Tree23.Node2{left: %Tree23.Leaf{key: 1, value: "z"},
+                                      right: %Tree23.Leaf{key: 2, value: "a"},
+                                      lower_key: 1, max_right_key: 2},
+                  lower_middle: %Tree23.Node2{
+                                      left: %Tree23.Leaf{key: 3, value: "g"},
+                                      right: %Tree23.Leaf{key: 4, value: "b"},
+                                      lower_key: 3, max_right_key: 4},
+                  upper_middle: %Tree23.Node2{left: %Tree23.Leaf{key: 8, value: "c"},
+                                        right: %Tree23.Leaf{key: 10, value: "d"},
+                                        lower_key: 8, max_right_key: 10},
+                  right: %Tree23.Node2{left: %Tree23.Leaf{key: 14, value: "e"},
+                                       right: %Tree23.Leaf{key: 16, value: "f"},
+                                       lower_key: 14, max_right_key: 16},
+                  lower_key: 2, middle_key: 4 ,upper_key: 10, max_right_key: 16}
+        end
+
+        test "Root node put where insert call returns Node2 or Node3" do
+          assert Tree23.put(%Tree23.Node2{left: %Tree23.Leaf{key: 2, value: "a"},
+                                          right: %Tree23.Leaf{key: 4, value: "b"},
+                                          lower_key: 2, max_right_key: 4}, 3, "c") ==
+            %Tree23.Node3{left: %Tree23.Leaf{key: 2, value: "a"},
+                                     middle: %Tree23.Leaf{key: 3, value: "c"},
+                                     right: %Tree23.Leaf{key: 4, value: "b"},
+                                     lower_key: 2, upper_key: 3, max_right_key: 4}
+        end
+
+        test "Root node put where insert call returns Node4" do
+          assert Tree23.put(%Tree23.Node3{left: %Tree23.Leaf{key: 2, value: "a"},
+                                          middle: %Tree23.Leaf{key: 3, value: "c"},
+                                          right: %Tree23.Leaf{key: 4, value: "b"},
+                                          lower_key: 2, upper_key: 3, max_right_key: 4}, 5, "d") ==
+            %Tree23.Node2{left: %Tree23.Node2{left: %Tree23.Leaf{key: 2, value: "a"},
+                                              right: %Tree23.Leaf{key: 3, value: "c"}, lower_key: 2, max_right_key: 3},
+                          right: %Tree23.Node2{left: %Tree23.Leaf{key: 4, value: "b"},
+                                               right: %Tree23.Leaf{key: 5, value: "d"}, lower_key: 4, max_right_key: 5},
+                          lower_key: 3, max_right_key: 5}
+        end
+
+
 end
