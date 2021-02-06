@@ -47,24 +47,6 @@ defmodule WitchcraftersPlay.Tree23 do
 
   end
 
-#  def new(), do: %Empty{}
-#
-#  @spec new(any(), any()) :: Node.t()
-#  def new(key, value), do: %Leaf{key: key, value: value}
-#
-#  @spec new(any(), Node.t(), Node.t())
-#  def new(lower_key, upper_key, left, right) do
-#    %Node2{lower_key: lower_key, upper_key: upper_key, left: left, right: right}
-#  end
-#
-#  @spec new(any(), Node.t(), Node.t(), Node.t())
-#  def new(lower_key, upper_key, left, middle, right), do: %Node3{key: key, left: left, middle: right, right: right}
-#
-#  @spec new(any(), Node.t(), Node.t(), Node.t(), Node.t())
-#  def new(lower_key, middle_key, upper_key, left, lower_middle, upper_middle, right) do
-#    %Node4{key: key, left: left, lower_middle: lower_middle, upper_middle: upper_middle, right: right}
-#  endinsert(left, orderable, value)
-
   #  @spec insert(t(), any()) :: t()
 
   def struct_put_in(struct, [key|[]], value) do
@@ -165,5 +147,25 @@ defmodule WitchcraftersPlay.Tree23 do
          Node2.new(mk, mrk, Node2.new(lk, mk, l, lm), Node2.new(uk, mrk, um, r))
       _ -> new_tree
     end
+  end
+
+  def to_list(%Empty{}) do
+    []
+  end
+
+  def to_list(%Leaf{key: key, value: val}) do
+    [{key, val}]
+  end
+
+  def to_list(%Node3{left: left, middle: middle, right: right}) do
+    to_list(left) ++ to_list(middle) ++ to_list(right)
+  end
+
+  def to_list(%Node2{left: left, right: right}) do
+    to_list(left) ++ to_list(right)
+  end
+
+  def to_list(tree) do
+    IO.inspect(tree)
   end
 end

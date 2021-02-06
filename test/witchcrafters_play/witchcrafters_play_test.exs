@@ -1,7 +1,6 @@
 defmodule WitchcraftersPlayTest do
-  use ExUnit.Case
   alias WitchcraftersPlay.Tree23
-  doctest WitchcraftersPlay
+  use  WitchcraftersPlay.TreeCase
 
   # helper function tests
   test "put_in for nested structs" do
@@ -495,6 +494,29 @@ defmodule WitchcraftersPlayTest do
                           right: %Tree23.Node2{left: %Tree23.Leaf{key: 4, value: "b"},
                                                right: %Tree23.Leaf{key: 5, value: "d"}, lower_key: 4, max_right_key: 5},
                           lower_key: 3, max_right_key: 5}
+        end
+
+        test "to_list for empty tree" do
+          assert Tree23.to_list(%Tree23.Empty{}) == []
+        end
+
+        test "to_list for a 2 Node" do
+          assert Tree23.to_list(%Tree23.Node2{left: %Tree23.Leaf{key: 1, value: "a"},
+                                       right: %Tree23.Leaf{key: 2, value: "b"}, lower_key: 1, max_right_key: 2}) == [{1, "a"}, {2, "b"}]
+        end
+
+        test "to_list for a 3 Node" do
+          assert Tree23.to_list(%Tree23.Node3{left: %Tree23.Leaf{key: 1, value: "a"},
+                                       middle: %Tree23.Leaf{key: 2, value: "b"},
+                                       right: %Tree23.Leaf{key: 3, value: "c"}, lower_key: 1, upper_key: 2, max_right_key: 3}) == [{1, "a"}, {2, "b"}, {3, "c"}]
+        end
+
+        test "Tree keys are correct" do
+          assert WitchcraftersPlay.TreeCase.check_tree_keys(%Tree23.Node2{left: %Tree23.Node2{left: %Tree23.Leaf{key: 2, value: "a"},
+                                                                   right: %Tree23.Leaf{key: 3, value: "c"}, lower_key: 2, max_right_key: 3},
+                                               right: %Tree23.Node2{left: %Tree23.Leaf{key: 4, value: "b"},
+                                                                    right: %Tree23.Leaf{key: 5, value: "d"}, lower_key: 4, max_right_key: 5},
+                                               lower_key: 3, max_right_key: 5}) == {:ok, 5}
         end
 
 
