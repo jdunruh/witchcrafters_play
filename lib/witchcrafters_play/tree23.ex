@@ -169,4 +169,34 @@ defmodule WitchcraftersPlay.Tree23 do
     IO.inspect("to_list default value - should not happen")
     IO.inspect(tree)
   end
+
+  def get(%Empty{}, _), do: nil
+
+  def get(%Leaf{key: leaf_key, value: value}, key) when leaf_key == key, do: value
+
+  def get(%Leaf{key: leaf_key, value: _value}, key) when leaf_key != key, do: nil
+
+  def get(%Node2{lower_key: lower_key, max_right_key: max_right_key, right: right, left: left}, key) do
+    case {compare(key, lower_key), compare(key, max_right_key)} do
+      {:lesser, _} -> get(left, key)
+      {:equal, _} -> get(left, key)
+      {_, :equal} -> get(right, key)
+      {_, :greater} -> nil
+      {_, :lesser} -> get(right, key)
+    end
+  end
+
+  def get(%Node3{lower_key: lower_key, upper_key: upper_key,
+                 max_right_key: max_right_key, right: right, middle: middle, left: left}, key) do
+    case {compare(key, lower_key), compare(key, upper_key), compare(key, max_right_key)} do
+      {:lesser, _, _} -> get(left, key)
+      {:equal, _, _} -> get(left, key)
+      {_, :equal, _} -> get(middle, key)
+      {_, :lesser, _} -> get(middle, key)
+      {_, _, :equal} -> get(right, key)
+      {_, _, :greater} -> nil
+      {_, _, :lesser} -> get(right, key)
+    end
+  end
+
 end

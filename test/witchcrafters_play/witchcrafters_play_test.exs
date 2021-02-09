@@ -533,4 +533,65 @@ defmodule WitchcraftersPlayTest do
           end
         end
 
+        test "get on an empty tree returns nil" do
+          assert Tree23.get(%Tree23.Empty{}, :c) == nil
+        end
+
+        test "get on a Leaf with the wrong key returns nil" do
+          assert Tree23.get(%Tree23.Leaf{key: :a, value: 5}, :b) == nil
+        end
+
+        test "get on a Leaf with the right key returns the value" do
+          assert Tree23.get(%Tree23.Leaf{key: :a, value: 5}, :a) == 5
+        end
+
+        test "get values from a 2 node" do
+          assert Tree23.get(%Tree23.Node2{left: %Tree23.Leaf{key: 5, value: "a"},
+                                          right: %Tree23.Leaf{key: 7, value: "b"},
+                                          lower_key: 5, max_right_key: 7}, 5) == "a"
+          assert Tree23.get(%Tree23.Node2{left: %Tree23.Leaf{key: 5, value: "a"},
+                                          right: %Tree23.Leaf{key: 7, value: "b"},
+                                          lower_key: 5, max_right_key: 7}, 6) == nil
+          assert Tree23.get(%Tree23.Node2{left: %Tree23.Leaf{key: 5, value: "a"},
+                                          right: %Tree23.Leaf{key: 7, value: "b"},
+                                          lower_key: 5, max_right_key: 7}, 3) == nil
+          assert Tree23.get(%Tree23.Node2{left: %Tree23.Leaf{key: 5, value: "a"},
+                                          right: %Tree23.Leaf{key: 7, value: "b"},
+                                          lower_key: 5, max_right_key: 7}, 7) == "b"
+          assert Tree23.get(%Tree23.Node2{left: %Tree23.Leaf{key: 5, value: "a"},
+                                          right: %Tree23.Leaf{key: 7, value: "b"},
+                                          lower_key: 5, max_right_key: 7}, 9) == nil
+        end
+
+        test "get values from a 3 node" do
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 3) == nil
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 5) == "a"
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 6) == nil
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 7) == "b"
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 8) == nil
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 9) == "c"
+          assert Tree23.get(%Tree23.Node3{left: %Tree23.Leaf{key: 5, value: "a"},
+                                           middle: %Tree23.Leaf{key: 7, value: "b"},
+                                           right: %Tree23.Leaf{key: 9, value: "c"},
+                                           lower_key: 5, upper_key: 7, max_right_key: 9}, 10) == nil
+        end
+
 end
