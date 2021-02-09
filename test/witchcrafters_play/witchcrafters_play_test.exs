@@ -1,5 +1,6 @@
 defmodule WitchcraftersPlayTest do
   alias WitchcraftersPlay.Tree23
+  use ExUnitProperties
   use  WitchcraftersPlay.TreeCase
 
   # helper function tests
@@ -519,5 +520,17 @@ defmodule WitchcraftersPlayTest do
                                                lower_key: 3, max_right_key: 5}) == {:ok, 5}
         end
 
+        property "2-3 trees are properly formed" do
+          check all vals <-
+          StreamData.uniq_list_of(StreamData.tuple({StreamData.integer(-100..100), StreamData.string(:ascii)}), min_length: 10, uniq_fun: &elem(&1, 0))
+            do
+            tree = Enum.reduce(vals, %Tree23.Empty{}, fn el, acc -> Tree23.put(acc, elem(el, 0), elem(el,1)) end)
+            map = Enum.reduce(vals, %{}, fn el, acc -> Map.put(acc, elem(el, 0), elem(el, 1)) end)
+            map_as_list = Enum.sort(Enum.to_list(map), &(elem(&1,0)) < elem(&2, 0))
+
+
+            assert(Tree23.to_list(tree) == map_as_list)
+          end
+        end
 
 end
